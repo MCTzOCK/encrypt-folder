@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Encrypt a whole folder using AES 256",
   "main": "src/cli.js",
+  "bin": "src/cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,7 +23,6 @@
   },
   "homepage": "https://github.com/MCTzOCK/encrypt-folder#readme",
   "dependencies": {
-    "chalk": "^4.1.2",
     "commander": "^8.2.0"
   }
 }

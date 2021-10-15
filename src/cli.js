@@ -2,7 +2,7 @@
 
 const { program } = require('commander');
 const { existsSync, readdirSync, lstatSync, renameSync } = require('fs');
-const { randomString, countDirectory, convert, encryptFile } = require('./lib/util');
+const { randomString, countDirectory, convert, encryptFile, decryptFile } = require('./lib/util');
 const { join } = require('path');
 const { encryptDirectory } = require('./lib/encrypt');
 const { decryptDirectory } = require('./lib/decrypt');
@@ -54,71 +54,65 @@ program
     .command("decrypt <path> [key]")
     .alias("d")
     .description("Decrypts a directory.")
-    .action((path, key) => {
+    .action((path, secKey) => {
+        if (existsSync(path)) {
 
-        if (key.length === 32) {
-            if (existsSync(path)) {
+            console.log("Path to decrypt: " + path);
+            process.env.EXEC_PATH = path;
 
-                console.log("Path to decrypt: " + path);
-                process.env.EXEC_PATH = path;
+            const readline = require('readline');
 
-                const readline = require('readline');
+            const rl = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            })
 
-                const rl = readline.createInterface({
-                    input: process.stdin,
-                    output: process.stdout
-                })
+            let key;
 
-                let key;
-
-                if (process.argv.length > 2) {
-                    if (process.argv[process.argv.length - 1].length === 32) {
-                        key = process.argv[process.argv.length - 1];
-                        decrypt();
-                    } else {
-                        getKey();
-                    }
-                } else {
-                    getKey();
-                }
-
-                function getKey() {
-                    rl.question("What is the Security Key? ", (answer) => {
-                        key = answer;
-                        decrypt();
-                    })
-                }
-
-
-                function decrypt() {
-
-                    let fileCount = util.countDirectory(process.EXEC_PATH);
-
-                    console.log("Total files to decrypt: " + fileCount)
-
-                    const directories = readdirSync(process.EXEC_PATH);
-
-                    directories.forEach(x => {
-                        if (lstatSync(join(process.EXEC_PATH, x)).isDirectory()) {
-                            decryptDirectory(join(process.EXEC_PATH, x))
-                            renameSync(join(process.EXEC_PATH, x), join(process.EXEC_PATH, util.convert("hex", "utf-8", x)))
-                        } else {
-                            console.log("decrypting file " + join(process.EXEC_PATH, x) + "...");
-
-                            util.decryptFile(join(process.EXEC_PATH, x), join(process.EXEC_PATH, x), key)
-                            renameSync(join(process.EXEC_PATH, x), join(process.EXEC_PATH, util.convert("hex", "utf-8", x)))
-                        }
-                    })
-
-                    rl.close();
-                    process.exit(0);
-                }
+            if (secKey === undefined) {
+                getKey();
             } else {
-                console.log("The path does not exists!")
+                if (secKey.length === 32) {
+                    key = secKey;
+                    decrypt();
+                } else {
+                    console.log("The key needs to be exactly 32 characters long!")
+                }
             }
 
+            function getKey() {
+                rl.question("What is the Security Key? ", (answer) => {
+                    key = answer;
+                    decrypt();
+                })
+            }
+
+
+            function decrypt() {
+
+                let fileCount = countDirectory(process.env.EXEC_PATH);
+
+                console.log("Total files to decrypt: " + fileCount)
+
+                const directories = readdirSync(process.env.EXEC_PATH);
+
+                directories.forEach(x => {
+                    if (lstatSync(join(process.env.EXEC_PATH, x)).isDirectory()) {
+                        decryptDirectory(join(process.env.EXEC_PATH, x))
+                        renameSync(join(process.env.EXEC_PATH, x), join(process.env.EXEC_PATH, convert("hex", "utf-8", x)))
+                    } else {
+                        console.log("decrypting file " + join(process.env.EXEC_PATH, x) + "...");
+
+                        decryptFile(join(process.env.EXEC_PATH, x), join(process.env.EXEC_PATH, x), key)
+                        renameSync(join(process.env.EXEC_PATH, x), join(process.env.EXEC_PATH, convert("hex", "utf-8", x)))
+                    }
+                })
+
+                rl.close();
+                process.exit(0);
+            }
         } else {
-            console.log("The key needs to be exactly 32 characters long!")
+            console.log("The path does not exists!")
         }
 
     })

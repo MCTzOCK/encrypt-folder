@@ -121,3 +121,12 @@ program
 program.parse(process.argv);
 
 
+const encrypt = require('./lib/encrypt');
+const decrypt = require('./lib/decrypt');
+const util = require('./lib/util');
+
+module.exports = {
+    encrypt,
+    decrypt,
+    util
+}

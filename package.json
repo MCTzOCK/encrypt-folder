@@ -1,0 +1,28 @@
+{
+  "name": "encrypt-folder",
+  "version": "1.0.0",
+  "description": "Encrypt a whole folder using AES 256",
+  "main": "src/cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MCTzOCK/encrypt-folder.git"
+  },
+  "keywords": [
+    "Encrypt",
+    "Folder",
+    "AES"
+  ],
+  "author": "Ben Siebert",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/MCTzOCK/encrypt-folder/issues"
+  },
+  "homepage": "https://github.com/MCTzOCK/encrypt-folder#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^8.2.0"
+  }
+}

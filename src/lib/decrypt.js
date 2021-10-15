@@ -2,7 +2,7 @@ const { lstatSync, readdirSync, renameSync } = require('fs');
 const { join } = require('path');
 const { decryptFile, convert } = require('./util')
 
-function decryptDirectory(path) {
+function decryptDirectory(path, key) {
     const files = readdirSync(path);
 
     files.forEach(f => {

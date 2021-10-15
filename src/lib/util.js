@@ -16,7 +16,6 @@ function randomString(length) {
     return result;
 }
 
-
 function encrypt(text, key) {
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);

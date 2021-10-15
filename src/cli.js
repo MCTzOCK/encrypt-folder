@@ -32,7 +32,7 @@ program
 
                 directories.forEach(x => {
                     if (lstatSync(join(process.env.EXEC_PATH, x)).isDirectory()) {
-                        encryptDirectory(join(process.env.EXEC_PATH, x))
+                        encryptDirectory(join(process.env.EXEC_PATH, x), key)
                         renameSync(join(process.env.EXEC_PATH, x), join(process.env.EXEC_PATH, convert("utf-8", "hex", x)))
                     } else {
                         console.log("encrypting file " + join(process.env.EXEC_PATH, x) + "...");
@@ -98,7 +98,7 @@ program
 
                 directories.forEach(x => {
                     if (lstatSync(join(process.env.EXEC_PATH, x)).isDirectory()) {
-                        decryptDirectory(join(process.env.EXEC_PATH, x))
+                        decryptDirectory(join(process.env.EXEC_PATH, x), key)
                         renameSync(join(process.env.EXEC_PATH, x), join(process.env.EXEC_PATH, convert("hex", "utf-8", x)))
                     } else {
                         console.log("decrypting file " + join(process.env.EXEC_PATH, x) + "...");

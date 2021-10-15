@@ -3,7 +3,7 @@ const { readdirSync, lstatSync, renameSync } = require('fs');
 const { encryptFile, convert } = require('./util')
 const { join } = require('path')
 
-function encryptDirectory(path) {
+function encryptDirectory(path, key) {
     const files = readdirSync(path);
 
     files.forEach(f => {
